@@ -12,9 +12,9 @@ from pathlib import Path
 
 import matplotlib
 
-matplotlib.use("Agg")
+matplotlib.use("Agg")   # allows generation and saving of images. Without a graphical window. 
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt 
 from langchain_core.tools import tool
 
 OUTPUTS_DIR = Path(__file__).resolve().parent.parent / "outputs"
@@ -35,10 +35,13 @@ def render_pie_chart(title: str, labels: list[str], values: list[float], filenam
         return "Error: labels and values must be the same length."
 
     # Strip any directory components so a crafted filename can't write outside outputs/.
-    safe_name = Path(filename).name
-    if not safe_name:
+    # extracts only the filename; sales.png > sales.png, charts/sales.png > sales.png, ../../secret.txt > secret.txt
+    safe_name = Path(filename).name 
+    if not safe_name: # Check whether filename is empty
         return "Error: filename must not be empty."
 
+    # fig: sheet of paper
+    # ax: area where you draw your chart
     fig, ax = plt.subplots()
     ax.pie(values, labels=labels, autopct="%1.0f%%")
     ax.set_title(title)

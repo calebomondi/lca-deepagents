@@ -37,12 +37,12 @@ from langchain.chat_models import init_chat_model
 # ═══ Default Models ══════════════════════════════════════════════════════════
 # Workshop default: Anthropic claude-haiku-4-5, fast and cost-effective.
 # Requires ANTHROPIC_API_KEY in .env
-model = init_chat_model("anthropic:claude-haiku-4-5", timeout=60, max_retries=2)
+# model = init_chat_model("anthropic:claude-haiku-4-5", timeout=60, max_retries=2)
 
 # A more capable model for steps that need stronger reasoning
-strong_model = init_chat_model(
-    "anthropic:claude-sonnet-5-5", timeout=120, max_retries=2
-)
+# strong_model = init_chat_model(
+#     "anthropic:claude-sonnet-5-5", timeout=120, max_retries=2
+# )
 
 # ═══ Alternative Models (comment out default above, uncomment one below) ═════
 # model = init_chat_model("anthropic:claude-sonnet-5-5")
@@ -78,8 +78,38 @@ strong_model = init_chat_model(
 # Requires OPENROUTER_API_KEY in .env
 #
 # from langchain_openai import ChatOpenAI
-# model = ChatOpenAI(model="nvidia/nemotron-3-ultra-550b-a55b:free", base_url="https://openrouter.ai/api/v1", api_key=os.environ["OPENROUTER_API_KEY"])
+# model = ChatOpenAI(
+#     model="nvidia/nemotron-3-ultra-550b-a55b:free", 
+#     base_url="https://openrouter.ai/api/v1", 
+#     api_key=os.environ["OPENROUTER_API_KEY"]
+#   )
 
+# GROQ
+# from langchain_groq import ChatGroq
+# model = ChatGroq(
+#     model="qwen/qwen3.8-27b",
+#     temperature=0.7
+# )
+
+# NEAR CLOUD AI
+from langchain_openai import ChatOpenAI
+
+NEAR_AI_BASE_URL = "https://cloud-api.near.ai/v1"
+
+def near_model(name: str, **overrides) -> ChatOpenAI:
+    """Return a ChatOpenAI client bound to NEAR AI Cloud."""
+    kwargs = dict(
+        model=name,
+        base_url=NEAR_AI_BASE_URL,
+        api_key=os.environ["NEAR_AI_API_KEY"],
+        timeout=60,
+        max_retries=2,
+    )
+    kwargs.update(overrides)
+    return ChatOpenAI(**kwargs)
+
+model = near_model("deepseek-ai/DeepSeek-V4.1-Flash-1017")
+strong_model = near_model("Qwen/Qwen3.8-27B", timeout=120)
 
 # ═══ Cloud Provider Models (extra install required, see table above) ═════════
 # ─── Azure OpenAI ─────────────────────────────────────────────────────────────

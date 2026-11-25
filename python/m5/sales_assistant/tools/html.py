@@ -9,8 +9,8 @@ an allowlist sanitizer (nh3) before it goes into the page — stripping any
 
 from __future__ import annotations
 
-import markdown as md
-import nh3
+import markdown as md   # converts Markdown into HTML
+import nh3              # sanitize HTML by removing dangerous elements and attributes, e.g., like Cross-Site Scripting (XSS)
 from langchain_core.tools import tool
 
 _HTML_TEMPLATE = """<!doctype html>

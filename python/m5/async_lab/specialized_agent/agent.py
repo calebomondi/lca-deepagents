@@ -18,9 +18,9 @@ other remote deployment.
 """
 
 import time
-
+import os
 import pandas as pd
-from langchain.chat_models import init_chat_model
+from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
 
 from deepagents import create_deep_agent
@@ -55,7 +55,13 @@ def analyze_sales(group_by: str = "region") -> str:
 # Separate environment, so no shared models.py: edit this string to switch providers.
 # For providers other than Anthropic or OpenAI, also run `uv add <provider package>`
 # in this folder. API keys still load from the shared .env (see langgraph.json).
-model = init_chat_model("anthropic:claude-haiku-4-5")
+# model = init_chat_model("anthropic:claude-haiku-4-5")
+NEAR_AI_BASE_URL = "https://cloud-api.near.ai/v1"
+model = ChatOpenAI(
+        model="deepseek-ai/DeepSeek-V4.1-Flash-1017",
+        base_url=NEAR_AI_BASE_URL,
+        api_key=os.environ["NEAR_AI_API_KEY"]
+    )
 
 # langgraph.json points at this module-level variable: "./agent.py:graph"
 graph = create_deep_agent(model=model, tools=[analyze_sales])
